@@ -1,7 +1,6 @@
 from sqlalchemy import (
     Column, Index, Integer, Text, Unicode, UnicodeText, DateTime
 )
-from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -9,8 +8,7 @@ import datetime
 
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-metadata = MetaData()
-Base = declarative_base(metadata=metadata)
+Base = declarative_base()
 
 
 class MyModel(Base):
@@ -27,20 +25,35 @@ class Entry(Base):
     id = Column(Integer, primary_key=True)
     title = Column(Unicode(255), nullable=False, unique=True)
     body = Column(UnicodeText)
-    created = Column(DateTime, default=datetime.datetime.now())
-    edited = Column(DateTime, default=datetime.datetime.now())
+    created = Column(DateTime, default=datetime.datetime.now)
+    edited = Column(DateTime, default=datetime.datetime.now)
 
-    def all(self):
+    @classmethod
+    def all(cls, session=None):
         """
         Returns all the entries in the database table, ordered so that the most
         recent entry is first.
+
+        Parameters
+        ==========
+        session: session to use when running from interpreter
         """
-        results = DBSession.query(self).order_by(self.created.desc()).all()
+        if session is None:
+            session = DBSession
+        results = session.query(cls).order_by(cls.created.desc()).all()
         return results
 
-    def by_id(self, id):
+    @classmethod
+    def by_id(cls, id, session=None):
         """
         Returns a single entry, given an id.
+
+        Parameters
+        ==========
+        id: id of the instance to return
+        session: session to use when running from interpreter
         """
-        result = DBSession.query(self).get(id)
+        if session is None:
+            session = DBSession
+        result = session.query(cls).get(id)
         return result
