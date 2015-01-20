@@ -24,9 +24,9 @@ class Entry(Base):
     __tablename__ = 'entries'
     id = Column(Integer, primary_key=True)
     title = Column(Unicode(255), nullable=False, unique=True)
-    body = Column(UnicodeText)
-    created = Column(DateTime, default=datetime.datetime.now)
-    edited = Column(DateTime, default=datetime.datetime.now)
+    body = Column(UnicodeText, default=u'')
+    created = Column(DateTime, default=datetime.datetime.utcnow)
+    edited = Column(DateTime, default=datetime.datetime.utcnow)
 
     @classmethod
     def all(cls, session=None):
@@ -40,7 +40,7 @@ class Entry(Base):
         """
         if session is None:
             session = DBSession
-        results = session.query(cls).order_by(cls.created.desc()).all()
+        results = session.query(cls).order_by(cls.edited.desc()).all()
         return results
 
     @classmethod
@@ -53,6 +53,7 @@ class Entry(Base):
         id: id of the instance to return
         session: session to use when running from interpreter
         """
+        id = int(id)  # convert to int
         if session is None:
             session = DBSession
         result = session.query(cls).get(id)
