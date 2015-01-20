@@ -58,3 +58,25 @@ class Entry(Base):
             session = DBSession
         result = session.query(cls).get(id)
         return result
+
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(Unicode(255), nullable=False, unique=True, index=True)
+    password = Column(UnicodeText, nullable=False)
+
+    @classmethod
+    def get_user(cls, username, session=None):
+        """
+        Returns a single user, given a username.
+
+        Parameters
+        ==========
+        username: username to retrieve
+        session: session to use when running from interpreter
+        """
+        if session is None:
+            session = DBSession
+        result = session.query(cls).filter(cls.username == username).one()
+        return result

@@ -8,6 +8,6 @@
   <p>Created <strong title="{{entry.created}}">{{entry.created}}</strong></p>
   <p>Modified <strong title="{{entry.edited}}">{{entry.edited}}</strong></p>
 </article>
-<p><a href="{{request.route_url('action', action='update', _query={'id': entry.id})}}">Update Entry</a></p>
-<p><a href="{{request.route_url('home')}}">Go Back</a></p>
+<p><a class="button" href="{{request.route_url('action', action='update', _query={'id': entry.id})}}">Update Entry</a></p>
+<p><a class="button" href="{{request.route_url('home')}}">Go Back</a></p>
 {% endblock %}

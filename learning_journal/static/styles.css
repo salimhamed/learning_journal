@@ -1,73 +1,124 @@
-body{
-    color:#111;
-    padding:0;
+/*body*/
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #EEEEEE;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+/*header*/
+header {
     margin:0;
-    background-color: #eee;}
-header{
-    margin:0;
-    padding:0 0.75em;
+    padding:0 0;
     width:100%;
-    background: #222;
-    color: #ccc;
-    border-bottom: 3px solid #fff;}
-header:after{
+    background: #D7001C;
+    border-bottom: 2px solid #C4CED4;
+}
+header:after {
     content:"";
     display:table;
-    clear:both;}
+    clear:both;
+}
 header a,
-footer a{
-    text-decoration:none}
+footer a {
+    text-decoration: none;
+    color: #000000;
+}
 header a:hover,
 footer a:hover {
-    color:#fff;
+    text-decoration: underline;
 }
 header a:visited,
 footer a:visited {
-    color:#eee;
+    text-decoration: none;
+    color:#000000;
 }
-header aside{
-    float:right;
-    text-align:right;
-    padding-right:0.75em}
+header aside {
+    float: right;
+    text-align: right;
+    padding-right: 0.75em
+}
 header ul{
+    padding: 0 2;
     list-style:none;
     list-style-type:none;
-    display:inline-block}
-header ul li{
-    margin:0 0.25em 0 0}
-header ul li a{
-    padding:0;
-    display:inline-block}
-main{padding:0 0.75em 1em}
-main:after{
+    display:inline-block
+}
+header ul li {
+    margin: 0 0 0 0;
+}
+header ul li a {
+    padding: 0;
+    display: inline-block
+}
+
+/*main*/
+main {
+    padding:0 2em
+}
+main:after {
     content:"";
     display:table;
-    clear:both}
-main article{
+    clear:both
+}
+main article {
     margin-bottom:1em;
-    padding-left:0.5em}
-main article h3{margin-top:0}
-main article .entry_body{
-    margin:0.5em}
-main aside{float:right}
-main aside .field{
-    margin-bottom:1em}
+    padding-left:0.5em
+}
+main article h3 {
+    margin-top:0
+}
+main article .entry_body {
+    margin:0.5em
+}
+main aside {
+    float:right
+}
+main aside .field {
+    margin-bottom:1em
+}
 main aside .field input,
 main aside .field label,
-main aside .field textarea{
-    vertical-align:top}
-main aside .field label{
+main aside .field textarea {
+    vertical-align:top
+}
+main aside .field label {
     display:inline-block;
     width:15%;
-    padding-top:2px}
+    padding-top:2px
+}
 main aside .field input,
-main aside .field textarea{
-    width:83%}
-main aside .control_row input{
-    margin-left:16%}
-footer{
-    padding: 1em 0.75em;
-    background: #222;
-    color: #ccc;
-    border-top: 3px solid #fff;
-    border-bottom: 3px solid #fff;}
+main aside .field textarea {
+    width:83%
+}
+main aside .control_row input {
+    margin-left:16%
+}
+
+/*button class*/
+p .button,
+p input .button
+{
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  color: #000000;
+  background: #D7001C;
+  padding: 7px 15px 7px 15px;
+  text-decoration: none;
+}
+p .button:hover
+p input .button:hover {
+  background: #ff8a9a;
+  text-decoration: none;
+}
+
+/*footer*/
+footer {
+    padding: 0.25em 0.75em;
+    background: #D7001C;
+    color: #000000;
+    border-top: 2px solid #C4CED4;
+    border-bottom: 2px solid #C4CED4;
+    font-size: 0.8em;
+}

@@ -10,7 +10,11 @@ def main(global_config, **settings):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     config = Configurator(settings=settings)
+
+    # include jinja2 templates
     config.include('pyramid_jinja2')
+
+    # add static view for static assets
     config.add_static_view('static', 'static', cache_max_age=3600)
 
     # configure routes
