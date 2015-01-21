@@ -1,8 +1,9 @@
-from .forms import EntryCreateForm
-from .models import DBSession, MyModel, Entry
+from .forms import EntryCreateForm, LoginForm
+from .models import DBSession, Entry, User
 from pyramid.exceptions import HTTPNotFound
 from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
+from pyramid.security import forget, remember, authenticated_userid
 from pyramid.view import view_config
 from sqlalchemy.exc import DBAPIError
 import datetime
@@ -11,7 +12,10 @@ import datetime
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def index_page(request):
     entries = Entry.all()
-    return {'entries': entries}
+    form = None
+    if not authenticated_userid(request):
+        form = LoginForm()
+    return {'entries': entries, 'login_form': form}
 
 
 @view_config(route_name='detail', renderer='templates/detail.jinja2')
@@ -24,7 +28,7 @@ def blog_view(request):
 
 
 @view_config(route_name='action', match_param='action=create',
-             renderer='templates/edit.jinja2')
+             renderer='templates/edit.jinja2', permission='create')
 def create(request):
     entry = Entry()
     form = EntryCreateForm(request.POST)
@@ -36,7 +40,7 @@ def create(request):
 
 
 @view_config(route_name='action', match_param='action=update',
-             renderer='templates/edit.jinja2')
+             renderer='templates/edit.jinja2', permission='edit')
 def update(request):
     this_id = request.GET['id']
     entry = Entry.by_id(this_id)
@@ -47,3 +51,23 @@ def update(request):
         DBSession.add(entry)
         return HTTPFound(location=request.route_url('detail', id=this_id))
     return {'form': form, 'action': 'update'}
+
+
+@view_config(route_name='auth', match_param='action=in', renderer='string',
+             request_method='POST')
+def sign_in(request):
+    login_form = None
+
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+
+    if login_form and login_form.validate():
+        user = User.by_name(login_form.username.data)
+        if user and user.verify_password(login_form.password.data):
+            headers = remember(request, user.username)
+        else:
+            headers = forget(request)
+    else:
+        headers = forget(request)
+
+    return HTTPFound(location=request.route_url('home'), headers=headers)

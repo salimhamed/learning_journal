@@ -1,7 +1,8 @@
-from ..models import DBSession, MyModel, Base, Entry
+from ..models import DBSession, MyModel, Base, Entry, User
 from pyramid.paster import get_appsettings, setup_logging
 from pyramid.scripts.common import parse_vars
 from sqlalchemy import engine_from_config
+from cryptacular.bcrypt import BCRYPTPasswordManager as Manager
 import os
 import sys
 import transaction
@@ -25,11 +26,14 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
+        # create admin user
+        manager = Manager()
+        password = manager.encode(u'admin')
+
+        # initalize database
         models = [
             MyModel(name='one', value=1),
-            Entry(title=u'test title', body=u'this is the test body')
+            Entry(title=u'test title', body=u'this is the test body'),
+            User(username=u'admin', password=password),
         ]
         DBSession.add_all(models)
-
-        # model = MyModel(name='one', value=1)
-        # DBSession.add(model)

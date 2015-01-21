@@ -1,6 +1,7 @@
 from sqlalchemy import (
     Column, Index, Integer, Text, Unicode, UnicodeText, DateTime
 )
+from cryptacular.bcrypt import BCRYPTPasswordManager as Manager
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -62,12 +63,16 @@ class Entry(Base):
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(Unicode(255), nullable=False, unique=True, index=True)
     password = Column(UnicodeText, nullable=False)
 
+    def verify_password(self, password):
+        manager = Manager()
+        return manager.check(self.password, password)
+
     @classmethod
-    def get_user(cls, username, session=None):
+    def by_name(cls, username, session=None):
         """
         Returns a single user, given a username.
 
@@ -78,5 +83,5 @@ class User(Base):
         """
         if session is None:
             session = DBSession
-        result = session.query(cls).filter(cls.username == username).one()
+        result = session.query(cls).filter(cls.username == username).first()
         return result
